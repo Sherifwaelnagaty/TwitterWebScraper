@@ -3,13 +3,16 @@ from bs4 import BeautifulSoup
 import time
 
 def twitter_scraper(accounts, ticker, time_interval):
+    headers = {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/96.0.4664.110 Safari/537.36"
+    }
     while True:
         for account in accounts:
-            url = f"{account}?lang=en"
-            response = requests.get(url)
+            url = f"{account}"
+            response = requests.get(url, headers=headers)
             if response.status_code == 200:
                 scrape = BeautifulSoup(response.content, 'html.parser')
-                tweets = scrape.find_all('div', {'data-testid': 'tweet'})
+                tweets = scrape.find_all('div', {'data-testid': 'tweetText'})
                 count = 0
                 for tweet in tweets:
                     tweet_text = tweet.find('div', {'lang': 'en'})
